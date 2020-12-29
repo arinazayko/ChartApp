@@ -1,0 +1,46 @@
+import React, { FC, MouseEvent, memo, useCallback } from "react";
+
+import "./Sidebar.styles.css";
+
+interface SidebarProps {
+  setChartName: any;
+}
+
+const chartNames = [
+  "EnterpriseFlag",
+  // "RecordNumber",
+  "MSACode",
+  "CensusTract",
+  "TractIncomeRatio",
+  "BorrowerIncomeRatio",
+  "LTV",
+  "PurposeOfLoan",
+  "FederalGuarantee",
+  "BorrowerRace",
+  "CoBorrowerRace",
+  "BorrowerGender",
+  "CoBorrowerGender",
+  // "NumberOfUnits",
+  "UnitAffordabilityCategory",
+];
+
+const Sidebar: FC<SidebarProps> = ({ setChartName }) => {
+  const onClick = useCallback(
+    (name) => (event: MouseEvent<HTMLLIElement>) => {
+      setChartName(name);
+    },
+    [setChartName]
+  );
+
+  return (
+    <ul className="sidebarList">
+      {chartNames.map((name: string) => (
+        <li className="listItem" onClick={onClick(name)}>
+          {name}
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+export default memo(Sidebar);

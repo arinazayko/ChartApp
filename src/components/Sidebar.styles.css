@@ -1,0 +1,18 @@
+.sidebarList {
+  max-width: 200px;
+
+  text-align: left;
+
+  list-style: none;
+}
+
+.listItem {
+  padding: 10px 4px;
+  border-radius: 4px;
+
+  cursor: pointer;
+}
+
+.listItem:hover {
+  background-color: aquamarine;
+}
