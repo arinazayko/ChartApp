@@ -8,7 +8,6 @@ interface SidebarProps {
 
 const chartNames = [
   "EnterpriseFlag",
-  // "RecordNumber",
   "MSACode",
   "CensusTract",
   "TractIncomeRatio",
@@ -20,8 +19,8 @@ const chartNames = [
   "CoBorrowerRace",
   "BorrowerGender",
   "CoBorrowerGender",
-  // "NumberOfUnits",
   "UnitAffordabilityCategory",
+  "RaceComparison",
 ];
 
 const Sidebar: FC<SidebarProps> = ({ setChartName }) => {

@@ -3,6 +3,7 @@ import ChartInfo from "../types/ChartInfo";
 
 import PieChart from "./charts/PieChart";
 import BarChart from "./charts/BarChart";
+import MixedChart from "./charts/MixedChart";
 
 interface ChartComponentProps {
   chartInfo: ChartInfo | null;
@@ -20,6 +21,9 @@ const ChartComponent: FC<ChartComponentProps> = ({ chartInfo }) => {
 
       case "bar":
         return <BarChart chartInfo={chartInfo} />;
+
+      case "mixed":
+        return <MixedChart chartInfo={chartInfo} />;
     }
   }, [chartInfo]);
 

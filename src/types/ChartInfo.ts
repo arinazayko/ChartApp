@@ -2,5 +2,9 @@ export default interface ChartInfo {
   captions: any;
   chartType: string;
   chartTitle?: string;
-  chartData: { [key: string]: number };
+  chartData: BasicChartData[];
+}
+
+export interface BasicChartData {
+  [key: string]: number;
 }

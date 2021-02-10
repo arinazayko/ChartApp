@@ -1,38 +1,72 @@
-import React, { FC, useState, useMemo } from "react";
+import React, { FC, useState, useMemo, useCallback } from "react";
 import UploadFile from "./UploadFile";
 import Sidebar from "./Sidebar";
 import ChartComponent from "./ChartComponent";
 import CsvValue from "../types/CsvValue";
 import { CsvValues } from "../enums/csvValues";
-import ChartInfo from "../types/ChartInfo";
+import ChartInfo, { BasicChartData } from "../types/ChartInfo";
 import "./MainPage.styles.css";
 
 const MainPage: FC = () => {
   const [chartName, setChartName] = useState("");
   const [csvData, setCsvData] = useState<CsvValue[]>([]);
 
-  const chosenFieldAmount = useMemo(() => {
+  const chartNameExceptions: { [key: string]: CsvValues[] } = useMemo(() => {
+    return {
+      RaceComparison: [CsvValues.BorrowerRace, CsvValues.CoBorrowerRace],
+    };
+  }, []);
+
+  const columnsArray = useMemo(() => {
+    return chartNameExceptions[chartName] || [chartName];
+  }, [chartName, chartNameExceptions]);
+
+  const typeAmounts = useMemo((): BasicChartData[] | null => {
     if (!csvData.length) {
       return null;
     }
 
-    const chosenFieldData = csvData.map((dataRow) => {
-      return dataRow[chartName];
+    return columnsArray.map((columnName) => {
+      const chosenColumnData = csvData.map((dataRow) => {
+        return dataRow[columnName];
+      });
+
+      return chosenColumnData.reduce(
+        (amounts: { [key: string]: number }, value: string) => {
+          const currentAmount = amounts[value] || 0;
+          amounts[value] = currentAmount + 1;
+
+          return amounts;
+        },
+        {}
+      );
     });
+  }, [columnsArray, csvData]);
 
-    return chosenFieldData.reduce(
-      (result: { [key: string]: number }, value: string) => {
-        const currentValue = result[value] || 0;
-        result[value] = currentValue + 1;
+  const hBarData = useCallback(
+    (typeAmountsData: BasicChartData): BasicChartData[] => {
+      const sum = Object.keys(typeAmountsData).reduce(
+        (result: number, key: string) => {
+          return result + typeAmountsData[key];
+        },
+        0
+      );
 
-        return result;
-      },
-      {}
-    );
-  }, [chartName, csvData]);
+      return [
+        Object.keys(typeAmountsData).reduce(
+          (result: { [key: string]: number }, value: string) => {
+            result[value] = +((typeAmountsData[value] / sum) * 100).toFixed(2);
+            return result;
+          },
+          {}
+        ),
+      ];
+    },
+    []
+  );
 
   const chartInfo: ChartInfo | null = useMemo(() => {
-    if (!chosenFieldAmount || !chartName) {
+    if (!typeAmounts || !chartName) {
       return null;
     }
 
@@ -44,7 +78,7 @@ const MainPage: FC = () => {
             "2": "Freddie Mac",
           },
           chartType: "pie",
-          chartData: chosenFieldAmount,
+          chartData: typeAmounts,
           chartTitle: CsvValues.EnterpriseFlag,
         };
 
@@ -55,7 +89,7 @@ const MainPage: FC = () => {
             "0": "Non-metropolitan area",
           },
           chartType: "pie",
-          chartData: chosenFieldAmount,
+          chartData: typeAmounts,
           chartTitle: CsvValues.MSACode,
         };
 
@@ -68,7 +102,7 @@ const MainPage: FC = () => {
             "9": "Missing",
           },
           chartType: "pie",
-          chartData: chosenFieldAmount,
+          chartData: typeAmounts,
           chartTitle: CsvValues.CensusTract,
         };
 
@@ -81,7 +115,7 @@ const MainPage: FC = () => {
             "9": "Missing",
           },
           chartType: "pie",
-          chartData: chosenFieldAmount,
+          chartData: typeAmounts,
           chartTitle: CsvValues.TractIncomeRatio,
         };
 
@@ -94,7 +128,7 @@ const MainPage: FC = () => {
             "9": "Not applicable",
           },
           chartType: "pie",
-          chartData: chosenFieldAmount,
+          chartData: typeAmounts,
           chartTitle: CsvValues.BorrowerIncomeRatio,
         };
 
@@ -109,7 +143,7 @@ const MainPage: FC = () => {
             "9": "Missing",
           },
           chartType: "pie",
-          chartData: chosenFieldAmount,
+          chartData: typeAmounts,
           chartTitle: CsvValues.LTV,
         };
 
@@ -121,7 +155,7 @@ const MainPage: FC = () => {
             "9": "Not applicable",
           },
           chartType: "pie",
-          chartData: chosenFieldAmount,
+          chartData: typeAmounts,
           chartTitle: CsvValues.PurposeOfLoan,
         };
 
@@ -135,7 +169,7 @@ const MainPage: FC = () => {
             "5": "FHA",
           },
           chartType: "pie",
-          chartData: chosenFieldAmount,
+          chartData: typeAmounts,
           chartTitle: CsvValues.FederalGuarantee,
         };
 
@@ -151,8 +185,8 @@ const MainPage: FC = () => {
             "7": "Hispanic or Latino",
             "9": "Not available",
           },
-          chartType: "pie",
-          chartData: chosenFieldAmount,
+          chartType: "bar",
+          chartData: hBarData(typeAmounts[0]),
           chartTitle: CsvValues.BorrowerRace,
         };
 
@@ -169,7 +203,7 @@ const MainPage: FC = () => {
             "9": "Not available",
           },
           chartType: "pie",
-          chartData: chosenFieldAmount,
+          chartData: typeAmounts,
           chartTitle: CsvValues.CoBorrowerRace,
         };
 
@@ -182,8 +216,8 @@ const MainPage: FC = () => {
             "4": "Not applicable",
             "9": "Missing",
           },
-          chartType: "pie",
-          chartData: chosenFieldAmount,
+          chartType: "bar",
+          chartData: hBarData(typeAmounts[0]),
           chartTitle: CsvValues.BorrowerGender,
         };
 
@@ -197,8 +231,8 @@ const MainPage: FC = () => {
             "5": "No co-borrower",
             "9": "Missing",
           },
-          chartType: "pie",
-          chartData: chosenFieldAmount,
+          chartType: "bar",
+          chartData: hBarData(typeAmounts[0]),
           chartTitle: CsvValues.CoBorrowerGender,
         };
 
@@ -213,14 +247,31 @@ const MainPage: FC = () => {
             "0": "Missing",
           },
           chartType: "pie",
-          chartData: chosenFieldAmount,
+          chartData: typeAmounts,
           chartTitle: CsvValues.UnitAffordabilityCategory,
+        };
+
+      case CsvValues.RaceComparison:
+        return {
+          captions: {
+            "1": "American Indian or Alaska Native",
+            "2": "Asian",
+            "3": "Black or African American",
+            "4": "Native Hawaiian or Other Pacific Islander",
+            "5": "White",
+            "6": "Two or more races",
+            "7": "Hispanic or Latino",
+            "9": "Not available",
+          },
+          chartType: "mixed",
+          chartData: typeAmounts,
+          chartTitle: CsvValues.RaceComparison,
         };
 
       default:
         return null;
     }
-  }, [chosenFieldAmount, chartName]);
+  }, [typeAmounts, chartName, hBarData]);
 
   const onArrayChange = (csvData: CsvValue[]) => {
     setCsvData(csvData);

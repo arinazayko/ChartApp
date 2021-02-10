@@ -8,7 +8,6 @@ interface PieChartProps {
 }
 
 const PieChart: FC<PieChartProps> = ({ chartInfo }) => {
-  console.log(chartInfo);
   const chartColors: string[] = useMemo(() => {
     return ["#03a9f4", "#ff9800", "#4caf50", "#ff5722"];
   }, []);
@@ -73,11 +72,11 @@ const PieChart: FC<PieChartProps> = ({ chartInfo }) => {
             textAlign: "left",
             fontSize: "12px",
           },
-          series: Object.keys(chartInfo.chartData).map((fieldName, i) => {
+          series: Object.keys(chartInfo.chartData[0]).map((fieldName, i) => {
             return {
               text: chartInfo.captions[fieldName],
               dataIndex: chartInfo.captions[fieldName],
-              values: [chartInfo.chartData[fieldName]],
+              values: [chartInfo.chartData[0][fieldName]],
               backgroundColor: chartColors[i],
             };
           }),

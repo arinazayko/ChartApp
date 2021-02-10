@@ -36,14 +36,11 @@ const BarChart: FC<BarChartProps> = ({ chartInfo }) => {
       },
     },
     plotarea: {
-      margin: "50px dynamic dynamic dynamic",
+      margin: "dynamic",
     },
-    // plot represents general series, or plots, styling
     plot: {
       stacked: true,
-      tooltip: {
-        visible: false,
-      },
+      stackType: 100,
       animation: {
         effect: "ANIMATION_SLIDE_TOP",
         method: "ANIMATION_BOUNCE_EASE_OUT",
@@ -51,41 +48,25 @@ const BarChart: FC<BarChartProps> = ({ chartInfo }) => {
         speed: 975,
       },
       lineWidth: "3px",
-      // line node styling
       marker: {
         borderWidth: "0px",
         size: "6px",
       },
     },
     scaleX: {
-      // set scale label
-      label: {
-        text: "Days",
-      },
-      // convert text on scale indices
-      labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      visible: false,
     },
     scaleY: {
-      // scale label with unicode character
-      label: {
-        text: "Work Productivity",
-      },
       format: "%v%",
+      minValue: 0,
+      maxValue: 100,
     },
-    crosshairX: {
-      plotLabel: {
-        padding: "10px 15px",
-        borderRadius: "3px",
-        sortByValue: "asc",
-      },
-      lineWidth: "100%",
-      alpha: 0.28,
-    },
-    series: Object.keys(chartInfo.chartData).map((fieldName, i) => {
+    series: Object.keys(chartInfo.chartData[0]).map((fieldName, i) => {
       return {
         text: chartInfo.captions[fieldName],
         dataIndex: chartInfo.captions[fieldName],
-        values: [chartInfo.chartData[fieldName]],
+        values: [chartInfo.chartData[0][fieldName]],
+        stack: i,
         backgroundColor: chartColors[i],
       };
     }),
