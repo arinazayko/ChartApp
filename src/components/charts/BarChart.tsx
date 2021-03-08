@@ -8,9 +8,10 @@ interface BarChartProps {
 }
 
 const BarChart: FC<BarChartProps> = ({ chartInfo }) => {
-  const chartColors: string[] = useMemo(() => {
-    return ["#03a9f4", "#ff9800", "#4caf50", "#ff5722"];
-  }, []);
+  const chartColors: string[] = useMemo(
+    () => ["#03a9f4", "#ff9800", "#4caf50", "#ff5722"],
+    []
+  );
 
   let chartConfig = {
     type: "hbar",

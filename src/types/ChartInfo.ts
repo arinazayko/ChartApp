@@ -6,5 +6,5 @@ export default interface ChartInfo {
 }
 
 export interface BasicChartData {
-  [key: string]: number;
+  [key: string]: any;
 }

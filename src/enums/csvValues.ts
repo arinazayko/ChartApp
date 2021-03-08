@@ -15,4 +15,5 @@ export enum CsvValues {
   NumberOfUnits = "NumberOfUnits",
   UnitAffordabilityCategory = "UnitAffordabilityCategory",
   RaceComparison = "RaceComparison",
+  BorrowerRaceGenderComparison = "BorrowerRaceGenderComparison",
 }

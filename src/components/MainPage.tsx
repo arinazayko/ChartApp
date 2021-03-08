@@ -5,6 +5,7 @@ import ChartComponent from "./ChartComponent";
 import CsvValue from "../types/CsvValue";
 import { CsvValues } from "../enums/csvValues";
 import ChartInfo, { BasicChartData } from "../types/ChartInfo";
+
 import "./MainPage.styles.css";
 
 const MainPage: FC = () => {
@@ -17,9 +18,10 @@ const MainPage: FC = () => {
     };
   }, []);
 
-  const columnsArray = useMemo(() => {
-    return chartNameExceptions[chartName] || [chartName];
-  }, [chartName, chartNameExceptions]);
+  const columnsArray = useMemo(
+    () => chartNameExceptions[chartName] || [chartName],
+    [chartName, chartNameExceptions]
+  );
 
   const typeAmounts = useMemo((): BasicChartData[] | null => {
     if (!csvData.length) {
@@ -31,10 +33,11 @@ const MainPage: FC = () => {
         return dataRow[columnName];
       });
 
+      // valueNumber is the number representing a specific race\gender etc.
       return chosenColumnData.reduce(
-        (amounts: { [key: string]: number }, value: string) => {
-          const currentAmount = amounts[value] || 0;
-          amounts[value] = currentAmount + 1;
+        (amounts: { [key: string]: number }, valueNumber: string) => {
+          const currentAmount = amounts[valueNumber] || 0;
+          amounts[valueNumber] = currentAmount + 1;
 
           return amounts;
         },
@@ -65,8 +68,35 @@ const MainPage: FC = () => {
     []
   );
 
+  const borrowerRaceGenderData = useCallback(
+    (data: CsvValue[]): BasicChartData => {
+      return data.reduce(
+        (raceCountByGender: { [genderNumber: string]: number[] }, dataRow) => {
+          const gender = dataRow[CsvValues.BorrowerGender];
+          const race = dataRow[CsvValues.BorrowerRace];
+
+          // Ignore everything but "male"/"female" and "unknown" race
+          if (+gender > 2 || race === "9") {
+            return raceCountByGender;
+          }
+
+          const raceCountForCurrentGender = raceCountByGender[gender] || [];
+
+          const raceCountArrayIndex = +race - 1;
+
+          raceCountForCurrentGender[raceCountArrayIndex] =
+            (raceCountForCurrentGender[raceCountArrayIndex] || 0) + 1;
+
+          return { ...raceCountByGender, [gender]: raceCountForCurrentGender };
+        },
+        {}
+      );
+    },
+    []
+  );
+
   const chartInfo: ChartInfo | null = useMemo(() => {
-    if (!typeAmounts || !chartName) {
+    if (!typeAmounts || !chartName || !csvData) {
       return null;
     }
 
@@ -257,7 +287,7 @@ const MainPage: FC = () => {
             "1": "American Indian or Alaska Native",
             "2": "Asian",
             "3": "Black or African American",
-            "4": "Native Hawaiian or Other Pacific Islander",
+            "4": "Native Hawaiian",
             "5": "White",
             "6": "Two or more races",
             "7": "Hispanic or Latino",
@@ -268,10 +298,26 @@ const MainPage: FC = () => {
           chartTitle: CsvValues.RaceComparison,
         };
 
+      case CsvValues.BorrowerRaceGenderComparison:
+        return {
+          captions: {
+            "1": "American Indian or Alaska Native",
+            "2": "Asian",
+            "3": "Black or African American",
+            "4": "Native Hawaiian",
+            "5": "White",
+            "6": "Two or more races",
+            "7": "Hispanic or Latino",
+          },
+          chartType: "raceGender",
+          chartData: [borrowerRaceGenderData(csvData)],
+          chartTitle: CsvValues.BorrowerRaceGenderComparison,
+        };
+
       default:
         return null;
     }
-  }, [typeAmounts, chartName, hBarData]);
+  }, [typeAmounts, chartName, csvData, hBarData, borrowerRaceGenderData]);
 
   const onArrayChange = (csvData: CsvValue[]) => {
     setCsvData(csvData);

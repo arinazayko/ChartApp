@@ -21,6 +21,7 @@ const chartNames = [
   "CoBorrowerGender",
   "UnitAffordabilityCategory",
   "RaceComparison",
+  "BorrowerRaceGenderComparison",
 ];
 
 const Sidebar: FC<SidebarProps> = ({ setChartName }) => {
@@ -35,7 +36,7 @@ const Sidebar: FC<SidebarProps> = ({ setChartName }) => {
     <ul className="sidebarList">
       {chartNames.map((name: string) => (
         <li className="listItem" onClick={onClick(name)}>
-          {name}
+          {name.split(/(?=[A-Z])/).join(" ")}
         </li>
       ))}
     </ul>

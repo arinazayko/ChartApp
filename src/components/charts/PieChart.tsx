@@ -8,9 +8,10 @@ interface PieChartProps {
 }
 
 const PieChart: FC<PieChartProps> = ({ chartInfo }) => {
-  const chartColors: string[] = useMemo(() => {
-    return ["#03a9f4", "#ff9800", "#4caf50", "#ff5722"];
-  }, []);
+  const chartColors: string[] = useMemo(
+    () => ["#03a9f4", "#ff9800", "#4caf50", "#ff5722"],
+    []
+  );
 
   let chartConfig = useMemo(() => {
     return {

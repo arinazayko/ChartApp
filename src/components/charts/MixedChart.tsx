@@ -8,9 +8,7 @@ interface MixedChartProps {
 }
 
 const MixedChart: FC<MixedChartProps> = ({ chartInfo }) => {
-  console.log(chartInfo);
-
-  const sortedKeys = Object.keys(chartInfo.chartData[0]).sort(function (a, b) {
+  const sortedKeys = Object.keys(chartInfo.chartData[0]).sort((a, b) => {
     return +a - +b;
   });
 
@@ -36,7 +34,19 @@ const MixedChart: FC<MixedChartProps> = ({ chartInfo }) => {
       textAlign: "left",
     },
     plotarea: {
+      marginTop: "100px",
       adjustLayout: true,
+    },
+    legend: {
+      cursor: "hand",
+      draggable: true,
+      dragHandler: "icon",
+      toggleAction: "remove",
+      minimize: true,
+      header: {
+        height: "20px",
+        text: chartInfo.chartTitle?.split(/(?=[A-Z])/).join(" "),
+      },
     },
     plot: {
       animation: {
