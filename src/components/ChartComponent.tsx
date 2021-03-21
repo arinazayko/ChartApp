@@ -1,4 +1,6 @@
 import React, { FC, memo, useCallback } from "react";
+
+import { ChartTypes } from "../enums/chartTypes";
 import ChartInfo from "../types/ChartInfo";
 
 import PieChart from "./charts/PieChart";
@@ -17,16 +19,16 @@ const ChartComponent: FC<ChartComponentProps> = ({ chartInfo }) => {
     }
 
     switch (chartInfo.chartType) {
-      case "pie":
+      case ChartTypes.Pie:
         return <PieChart chartInfo={chartInfo} />;
 
-      case "bar":
+      case ChartTypes.Bar:
         return <BarChart chartInfo={chartInfo} />;
 
-      case "mixed":
+      case ChartTypes.Mixed:
         return <MixedChart chartInfo={chartInfo} />;
 
-      case "raceGender":
+      case ChartTypes.RaceGender:
         return <RaceGender chartInfo={chartInfo} />;
     }
   }, [chartInfo]);

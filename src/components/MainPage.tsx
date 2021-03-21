@@ -1,10 +1,13 @@
 import React, { FC, useState, useMemo, useCallback } from "react";
+
+import CsvValue from "../types/CsvValue";
+import { ChartTypes } from "../enums/chartTypes";
+import { CsvValues } from "../enums/csvValues";
+import ChartInfo, { BasicChartData } from "../types/ChartInfo";
+
 import UploadFile from "./UploadFile";
 import Sidebar from "./Sidebar";
 import ChartComponent from "./ChartComponent";
-import CsvValue from "../types/CsvValue";
-import { CsvValues } from "../enums/csvValues";
-import ChartInfo, { BasicChartData } from "../types/ChartInfo";
 
 import "./MainPage.styles.css";
 
@@ -107,7 +110,7 @@ const MainPage: FC = () => {
             "1": "Fannie Mae",
             "2": "Freddie Mac",
           },
-          chartType: "pie",
+          chartType: ChartTypes.Pie,
           chartData: typeAmounts,
           chartTitle: CsvValues.EnterpriseFlag,
         };
@@ -118,7 +121,7 @@ const MainPage: FC = () => {
             "1": "Metropolitan area",
             "0": "Non-metropolitan area",
           },
-          chartType: "pie",
+          chartType: ChartTypes.Pie,
           chartData: typeAmounts,
           chartTitle: CsvValues.MSACode,
         };
@@ -131,7 +134,7 @@ const MainPage: FC = () => {
             "3": ">=30, <=100%",
             "9": "Missing",
           },
-          chartType: "pie",
+          chartType: ChartTypes.Pie,
           chartData: typeAmounts,
           chartTitle: CsvValues.CensusTract,
         };
@@ -144,7 +147,7 @@ const MainPage: FC = () => {
             "3": ">120%",
             "9": "Missing",
           },
-          chartType: "pie",
+          chartType: ChartTypes.Pie,
           chartData: typeAmounts,
           chartTitle: CsvValues.TractIncomeRatio,
         };
@@ -157,7 +160,7 @@ const MainPage: FC = () => {
             "3": ">80%",
             "9": "Not applicable",
           },
-          chartType: "pie",
+          chartType: ChartTypes.Pie,
           chartData: typeAmounts,
           chartTitle: CsvValues.BorrowerIncomeRatio,
         };
@@ -172,7 +175,7 @@ const MainPage: FC = () => {
             "5": ">95%",
             "9": "Missing",
           },
-          chartType: "pie",
+          chartType: ChartTypes.Pie,
           chartData: typeAmounts,
           chartTitle: CsvValues.LTV,
         };
@@ -184,7 +187,7 @@ const MainPage: FC = () => {
             "8": "Other",
             "9": "Not applicable",
           },
-          chartType: "pie",
+          chartType: ChartTypes.Pie,
           chartData: typeAmounts,
           chartTitle: CsvValues.PurposeOfLoan,
         };
@@ -198,7 +201,7 @@ const MainPage: FC = () => {
             "4": "No Federal guarantee",
             "5": "FHA",
           },
-          chartType: "pie",
+          chartType: ChartTypes.Pie,
           chartData: typeAmounts,
           chartTitle: CsvValues.FederalGuarantee,
         };
@@ -215,7 +218,7 @@ const MainPage: FC = () => {
             "7": "Hispanic or Latino",
             "9": "Not available",
           },
-          chartType: "bar",
+          chartType: ChartTypes.Bar,
           chartData: hBarData(typeAmounts[0]),
           chartTitle: CsvValues.BorrowerRace,
         };
@@ -232,7 +235,7 @@ const MainPage: FC = () => {
             "7": "Hispanic or Latino",
             "9": "Not available",
           },
-          chartType: "pie",
+          chartType: ChartTypes.Pie,
           chartData: typeAmounts,
           chartTitle: CsvValues.CoBorrowerRace,
         };
@@ -246,7 +249,7 @@ const MainPage: FC = () => {
             "4": "Not applicable",
             "9": "Missing",
           },
-          chartType: "bar",
+          chartType: ChartTypes.Bar,
           chartData: hBarData(typeAmounts[0]),
           chartTitle: CsvValues.BorrowerGender,
         };
@@ -261,7 +264,7 @@ const MainPage: FC = () => {
             "5": "No co-borrower",
             "9": "Missing",
           },
-          chartType: "bar",
+          chartType: ChartTypes.Bar,
           chartData: hBarData(typeAmounts[0]),
           chartTitle: CsvValues.CoBorrowerGender,
         };
@@ -276,7 +279,7 @@ const MainPage: FC = () => {
             "9": "Not available",
             "0": "Missing",
           },
-          chartType: "pie",
+          chartType: ChartTypes.Pie,
           chartData: typeAmounts,
           chartTitle: CsvValues.UnitAffordabilityCategory,
         };
@@ -293,7 +296,7 @@ const MainPage: FC = () => {
             "7": "Hispanic or Latino",
             "9": "Not available",
           },
-          chartType: "mixed",
+          chartType: ChartTypes.Mixed,
           chartData: typeAmounts,
           chartTitle: CsvValues.RaceComparison,
         };
@@ -309,7 +312,7 @@ const MainPage: FC = () => {
             "6": "Two or more races",
             "7": "Hispanic or Latino",
           },
-          chartType: "raceGender",
+          chartType: ChartTypes.RaceGender,
           chartData: [borrowerRaceGenderData(csvData)],
           chartTitle: CsvValues.BorrowerRaceGenderComparison,
         };
