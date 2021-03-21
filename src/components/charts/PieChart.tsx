@@ -1,17 +1,18 @@
-import React, { FC, useMemo, memo } from "react";
+import React, { FC, useMemo } from "react";
 import "zingchart/es6";
 import ZingChart from "zingchart-react";
+
+import { getFormattedText } from "../../utils/getFormattedText";
 import ChartInfo from "../../types/ChartInfo";
 
 interface PieChartProps {
   chartInfo: ChartInfo;
 }
 
+const chartColors = ["#03a9f4", "#ff9800", "#4caf50", "#ff5722"];
+
 const PieChart: FC<PieChartProps> = ({ chartInfo }) => {
-  const chartColors: string[] = useMemo(
-    () => ["#03a9f4", "#ff9800", "#4caf50", "#ff5722"],
-    []
-  );
+  const { chartData, captions, chartTitle } = chartInfo;
 
   let chartConfig = useMemo(() => {
     return {
@@ -24,7 +25,7 @@ const PieChart: FC<PieChartProps> = ({ chartInfo }) => {
           x: "0px",
           y: "0px",
           title: {
-            text: chartInfo.chartTitle?.split(/(?=[A-Z])/).join(" "),
+            text: getFormattedText(chartTitle!),
             fontSize: "24px",
           },
           legend: {
@@ -73,25 +74,20 @@ const PieChart: FC<PieChartProps> = ({ chartInfo }) => {
             textAlign: "left",
             fontSize: "12px",
           },
-          series: Object.keys(chartInfo.chartData[0]).map((fieldName, i) => {
+          series: Object.keys(chartData[0]).map((fieldName, i) => {
             return {
-              text: chartInfo.captions[fieldName],
-              dataIndex: chartInfo.captions[fieldName],
-              values: [chartInfo.chartData[0][fieldName]],
+              text: captions[fieldName],
+              dataIndex: captions[fieldName],
+              values: [chartData[0][fieldName]],
               backgroundColor: chartColors[i],
             };
           }),
         },
       ],
     };
-  }, [
-    chartColors,
-    chartInfo.captions,
-    chartInfo.chartData,
-    chartInfo.chartTitle,
-  ]);
+  }, [captions, chartData, chartTitle]);
 
   return <ZingChart data={chartConfig} />;
 };
 
-export default memo(PieChart);
+export default PieChart;

@@ -1,17 +1,18 @@
-import React, { FC, useMemo, memo } from "react";
+import React, { FC } from "react";
 import "zingchart/es6";
 import ZingChart from "zingchart-react";
+
+import { getFormattedText } from "../../utils/getFormattedText";
 import ChartInfo from "../../types/ChartInfo";
 
 interface BarChartProps {
   chartInfo: ChartInfo;
 }
 
+const chartColors = ["#03a9f4", "#ff9800", "#4caf50", "#ff5722"];
+
 const BarChart: FC<BarChartProps> = ({ chartInfo }) => {
-  const chartColors: string[] = useMemo(
-    () => ["#03a9f4", "#ff9800", "#4caf50", "#ff5722"],
-    []
-  );
+  const { chartData, captions, chartTitle } = chartInfo;
 
   let chartConfig = {
     type: "hbar",
@@ -20,7 +21,7 @@ const BarChart: FC<BarChartProps> = ({ chartInfo }) => {
       fontFamily: "Helvetica",
     },
     title: {
-      text: chartInfo.chartTitle?.split(/(?=[A-Z])/).join(" "),
+      text: getFormattedText(chartTitle!),
       paddingLeft: "50px",
       fontSize: "24px",
       textAlign: "left",
@@ -33,7 +34,7 @@ const BarChart: FC<BarChartProps> = ({ chartInfo }) => {
       minimize: true,
       header: {
         height: "20px",
-        text: chartInfo.chartTitle?.split(/(?=[A-Z])/).join(" "),
+        text: getFormattedText(chartTitle!),
       },
     },
     plotarea: {
@@ -62,11 +63,11 @@ const BarChart: FC<BarChartProps> = ({ chartInfo }) => {
       minValue: 0,
       maxValue: 100,
     },
-    series: Object.keys(chartInfo.chartData[0]).map((fieldName, i) => {
+    series: Object.keys(chartData[0]).map((fieldName, i) => {
       return {
-        text: chartInfo.captions[fieldName],
-        dataIndex: chartInfo.captions[fieldName],
-        values: [chartInfo.chartData[0][fieldName]],
+        text: captions[fieldName],
+        dataIndex: captions[fieldName],
+        values: [chartData[0][fieldName]],
         stack: i,
         backgroundColor: chartColors[i],
       };
@@ -76,4 +77,4 @@ const BarChart: FC<BarChartProps> = ({ chartInfo }) => {
   return <ZingChart data={chartConfig} />;
 };
 
-export default memo(BarChart);
+export default BarChart;

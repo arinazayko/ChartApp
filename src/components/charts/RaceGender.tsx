@@ -1,28 +1,29 @@
-import React, { FC, memo, useMemo } from "react";
+import React, { FC } from "react";
 import "zingchart/es6";
 import ZingChart from "zingchart-react";
+
+import { getFormattedText } from "../../utils/getFormattedText";
 import ChartInfo from "../../types/ChartInfo";
 
 interface MixedChartProps {
   chartInfo: ChartInfo;
 }
 
+const chartColors = ["#03a9f4", "#ff9800", "#4caf50", "#ff5722"];
+
 const RaceGender: FC<MixedChartProps> = ({ chartInfo }) => {
-  const chartColors: string[] = useMemo(
-    () => ["#03a9f4", "#ff9800", "#4caf50", "#ff5722"],
-    []
-  );
+  const { chartData, captions, chartTitle } = chartInfo;
+  const data = chartData[0];
 
-  const chartData = chartInfo.chartData[0];
-
-  const sortedKeys = Object.keys(chartInfo.captions).sort((a, b) => {
+  const sortedKeys = Object.keys(captions).sort((a, b) => {
     return +a - +b;
   });
 
-  const labels = sortedKeys.map((key) => chartInfo.captions[key]);
+  const labels = sortedKeys.map((key) => captions[key]);
 
-  const series = Object.keys(chartData).map((key: string, i: number) => {
-    const valuesArray = chartData[key];
+  const series = Object.keys(data).map((key: string, i: number) => {
+    const valuesArray = data[key];
+
     return {
       values: valuesArray,
       backgroundColor: chartColors[i],
@@ -39,7 +40,7 @@ const RaceGender: FC<MixedChartProps> = ({ chartInfo }) => {
       fontFamily: "Helvetica",
     },
     title: {
-      text: chartInfo.chartTitle?.split(/(?=[A-Z])/).join(" "),
+      text: getFormattedText(chartTitle!),
       fontSize: "24px",
     },
     plot: {
@@ -59,7 +60,7 @@ const RaceGender: FC<MixedChartProps> = ({ chartInfo }) => {
       minimize: true,
       header: {
         height: "20px",
-        text: chartInfo.chartTitle?.split(/(?=[A-Z])/).join(" "),
+        text: getFormattedText(chartTitle!),
       },
     },
     scaleX: {
@@ -85,4 +86,4 @@ const RaceGender: FC<MixedChartProps> = ({ chartInfo }) => {
   return <ZingChart data={chartConfig} />;
 };
 
-export default memo(RaceGender);
+export default RaceGender;

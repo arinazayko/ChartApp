@@ -1,5 +1,7 @@
 import React, { FC, MouseEvent, memo, useCallback } from "react";
 
+import { getFormattedText } from "../utils/getFormattedText";
+
 import "./Sidebar.styles.css";
 
 interface SidebarProps {
@@ -36,7 +38,7 @@ const Sidebar: FC<SidebarProps> = ({ setChartName }) => {
     <ul className="sidebarList">
       {chartNames.map((name: string) => (
         <li className="listItem" onClick={onClick(name)}>
-          {name.split(/(?=[A-Z])/).join(" ")}
+          {getFormattedText(name)}
         </li>
       ))}
     </ul>

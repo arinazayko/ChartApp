@@ -1,6 +1,8 @@
-import React, { FC, memo } from "react";
+import React, { FC } from "react";
 import "zingchart/es6";
 import ZingChart from "zingchart-react";
+
+import { getFormattedText } from "../../utils/getFormattedText";
 import ChartInfo from "../../types/ChartInfo";
 
 interface MixedChartProps {
@@ -8,18 +10,19 @@ interface MixedChartProps {
 }
 
 const MixedChart: FC<MixedChartProps> = ({ chartInfo }) => {
-  const sortedKeys = Object.keys(chartInfo.chartData[0]).sort((a, b) => {
+  const { chartData, captions, chartTitle } = chartInfo;
+
+  const sortedKeys = Object.keys(chartData[0]).sort((a, b) => {
     return +a - +b;
   });
 
-  const labels = sortedKeys.map((key) => chartInfo.captions[key]);
+  const labels = sortedKeys.map((key) => captions[key]);
 
-  const series = chartInfo.chartData.map(
-    (sourceColumn: { [key: string]: number }) => {
-      const valuesArray = sortedKeys.map((key) => sourceColumn[key]);
-      return { values: valuesArray };
-    }
-  );
+  const series = chartData.map((sourceColumn: { [key: string]: number }) => {
+    const valuesArray = sortedKeys.map((key) => sourceColumn[key]);
+
+    return { values: valuesArray };
+  });
 
   let chartConfig = {
     type: "bar",
@@ -28,7 +31,7 @@ const MixedChart: FC<MixedChartProps> = ({ chartInfo }) => {
       fontFamily: "Helvetica",
     },
     title: {
-      text: chartInfo.chartTitle?.split(/(?=[A-Z])/).join(" "),
+      text: getFormattedText(chartTitle!),
       paddingLeft: "50px",
       fontSize: "24px",
       textAlign: "left",
@@ -45,7 +48,7 @@ const MixedChart: FC<MixedChartProps> = ({ chartInfo }) => {
       minimize: true,
       header: {
         height: "20px",
-        text: chartInfo.chartTitle?.split(/(?=[A-Z])/).join(" "),
+        text: getFormattedText(chartTitle!),
       },
     },
     plot: {
@@ -71,4 +74,4 @@ const MixedChart: FC<MixedChartProps> = ({ chartInfo }) => {
   return <ZingChart data={chartConfig} />;
 };
 
-export default memo(MixedChart);
+export default MixedChart;
