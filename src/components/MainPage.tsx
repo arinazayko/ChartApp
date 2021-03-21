@@ -4,6 +4,20 @@ import CsvValue from "../types/CsvValue";
 import { ChartTypes } from "../enums/chartTypes";
 import { CsvValues } from "../enums/csvValues";
 import ChartInfo, { BasicChartData } from "../types/ChartInfo";
+import {
+  enterpriseFlag,
+  MSACode,
+  censusTract,
+  tractIncomeRatio,
+  borrowerIncomeRatio,
+  LTV,
+  purposeOfLoan,
+  federalGuarantee,
+  race,
+  borrowerGender,
+  coBorrowerGender,
+  unitAffordabilityCategory,
+} from "../constants/chartValues";
 
 import UploadFile from "./UploadFile";
 import Sidebar from "./Sidebar";
@@ -106,10 +120,7 @@ const MainPage: FC = () => {
     switch (chartName) {
       case CsvValues.EnterpriseFlag:
         return {
-          captions: {
-            "1": "Fannie Mae",
-            "2": "Freddie Mac",
-          },
+          captions: enterpriseFlag,
           chartType: ChartTypes.Pie,
           chartData: typeAmounts,
           chartTitle: CsvValues.EnterpriseFlag,
@@ -117,10 +128,7 @@ const MainPage: FC = () => {
 
       case CsvValues.MSACode:
         return {
-          captions: {
-            "1": "Metropolitan area",
-            "0": "Non-metropolitan area",
-          },
+          captions: MSACode,
           chartType: ChartTypes.Pie,
           chartData: typeAmounts,
           chartTitle: CsvValues.MSACode,
@@ -128,12 +136,7 @@ const MainPage: FC = () => {
 
       case CsvValues.CensusTract:
         return {
-          captions: {
-            "1": ">=0, <10%",
-            "2": ">=10, <30%",
-            "3": ">=30, <=100%",
-            "9": "Missing",
-          },
+          captions: censusTract,
           chartType: ChartTypes.Pie,
           chartData: typeAmounts,
           chartTitle: CsvValues.CensusTract,
@@ -141,12 +144,7 @@ const MainPage: FC = () => {
 
       case CsvValues.TractIncomeRatio:
         return {
-          captions: {
-            "1": ">0, <=80%",
-            "2": ">80, <=120%",
-            "3": ">120%",
-            "9": "Missing",
-          },
+          captions: tractIncomeRatio,
           chartType: ChartTypes.Pie,
           chartData: typeAmounts,
           chartTitle: CsvValues.TractIncomeRatio,
@@ -154,12 +152,7 @@ const MainPage: FC = () => {
 
       case CsvValues.BorrowerIncomeRatio:
         return {
-          captions: {
-            "1": ">=0,<=50%",
-            "2": ">50, <=80%",
-            "3": ">80%",
-            "9": "Not applicable",
-          },
+          captions: borrowerIncomeRatio,
           chartType: ChartTypes.Pie,
           chartData: typeAmounts,
           chartTitle: CsvValues.BorrowerIncomeRatio,
@@ -167,14 +160,7 @@ const MainPage: FC = () => {
 
       case CsvValues.LTV:
         return {
-          captions: {
-            "1": ">0, <=60%",
-            "2": ">60, <=80%",
-            "3": ">80, <=90%",
-            "4": ">90, <=95%",
-            "5": ">95%",
-            "9": "Missing",
-          },
+          captions: LTV,
           chartType: ChartTypes.Pie,
           chartData: typeAmounts,
           chartTitle: CsvValues.LTV,
@@ -182,11 +168,7 @@ const MainPage: FC = () => {
 
       case CsvValues.PurposeOfLoan:
         return {
-          captions: {
-            "1": "Purchase",
-            "8": "Other",
-            "9": "Not applicable",
-          },
+          captions: purposeOfLoan,
           chartType: ChartTypes.Pie,
           chartData: typeAmounts,
           chartTitle: CsvValues.PurposeOfLoan,
@@ -194,13 +176,7 @@ const MainPage: FC = () => {
 
       case CsvValues.FederalGuarantee:
         return {
-          captions: {
-            "1": "FHA/VA",
-            "2": "Rural Housing Service",
-            "3": "Home Equity Conversion Mortgage",
-            "4": "No Federal guarantee",
-            "5": "FHA",
-          },
+          captions: federalGuarantee,
           chartType: ChartTypes.Pie,
           chartData: typeAmounts,
           chartTitle: CsvValues.FederalGuarantee,
@@ -208,16 +184,7 @@ const MainPage: FC = () => {
 
       case CsvValues.BorrowerRace:
         return {
-          captions: {
-            "1": "American Indian or Alaska Native",
-            "2": "Asian",
-            "3": "Black or African American",
-            "4": "Native Hawaiian or Other Pacific Islander",
-            "5": "White",
-            "6": "Two or more races",
-            "7": "Hispanic or Latino",
-            "9": "Not available",
-          },
+          captions: { ...race, "9": "Not available" },
           chartType: ChartTypes.Bar,
           chartData: hBarData(typeAmounts[0]),
           chartTitle: CsvValues.BorrowerRace,
@@ -225,16 +192,7 @@ const MainPage: FC = () => {
 
       case CsvValues.CoBorrowerRace:
         return {
-          captions: {
-            "1": "American Indian or Alaska Native",
-            "2": "Asian",
-            "3": "Black or African American",
-            "4": "Native Hawaiian or Other Pacific Islander",
-            "5": "White",
-            "6": "Two or more races",
-            "7": "Hispanic or Latino",
-            "9": "Not available",
-          },
+          captions: { ...race, "9": "Not available" },
           chartType: ChartTypes.Pie,
           chartData: typeAmounts,
           chartTitle: CsvValues.CoBorrowerRace,
@@ -242,13 +200,7 @@ const MainPage: FC = () => {
 
       case CsvValues.BorrowerGender:
         return {
-          captions: {
-            "1": "Male",
-            "2": "Female",
-            "3": "Information is not provided",
-            "4": "Not applicable",
-            "9": "Missing",
-          },
+          captions: borrowerGender,
           chartType: ChartTypes.Bar,
           chartData: hBarData(typeAmounts[0]),
           chartTitle: CsvValues.BorrowerGender,
@@ -256,14 +208,7 @@ const MainPage: FC = () => {
 
       case CsvValues.CoBorrowerGender:
         return {
-          captions: {
-            "1": "Male",
-            "2": "Female",
-            "3": "Information is not provided",
-            "4": "Not applicable",
-            "5": "No co-borrower",
-            "9": "Missing",
-          },
+          captions: coBorrowerGender,
           chartType: ChartTypes.Bar,
           chartData: hBarData(typeAmounts[0]),
           chartTitle: CsvValues.CoBorrowerGender,
@@ -271,14 +216,7 @@ const MainPage: FC = () => {
 
       case CsvValues.UnitAffordabilityCategory:
         return {
-          captions: {
-            "1": "Low-income family in a low-income area",
-            "2": "Very low-income family in a low-income area",
-            "3": "Very low-income family not in a low-income area",
-            "4": "Other",
-            "9": "Not available",
-            "0": "Missing",
-          },
+          captions: unitAffordabilityCategory,
           chartType: ChartTypes.Pie,
           chartData: typeAmounts,
           chartTitle: CsvValues.UnitAffordabilityCategory,
@@ -286,16 +224,7 @@ const MainPage: FC = () => {
 
       case CsvValues.RaceComparison:
         return {
-          captions: {
-            "1": "American Indian or Alaska Native",
-            "2": "Asian",
-            "3": "Black or African American",
-            "4": "Native Hawaiian",
-            "5": "White",
-            "6": "Two or more races",
-            "7": "Hispanic or Latino",
-            "9": "Not available",
-          },
+          captions: { ...race, "9": "Not available" },
           chartType: ChartTypes.Mixed,
           chartData: typeAmounts,
           chartTitle: CsvValues.RaceComparison,
@@ -303,15 +232,7 @@ const MainPage: FC = () => {
 
       case CsvValues.BorrowerRaceGenderComparison:
         return {
-          captions: {
-            "1": "American Indian or Alaska Native",
-            "2": "Asian",
-            "3": "Black or African American",
-            "4": "Native Hawaiian",
-            "5": "White",
-            "6": "Two or more races",
-            "7": "Hispanic or Latino",
-          },
+          captions: race,
           chartType: ChartTypes.RaceGender,
           chartData: [borrowerRaceGenderData(csvData)],
           chartTitle: CsvValues.BorrowerRaceGenderComparison,
