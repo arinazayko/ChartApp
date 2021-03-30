@@ -50,11 +50,11 @@ const MainPage: FC = () => {
         return dataRow[columnName];
       });
 
-      // valueNumber is the number representing a specific race\gender etc.
+      // 'value' is the number representing a specific race\gender etc.
       return chosenColumnData.reduce(
-        (amounts: { [key: string]: number }, valueNumber: string) => {
-          const currentAmount = amounts[valueNumber] || 0;
-          amounts[valueNumber] = currentAmount + 1;
+        (amounts: { [key: string]: number }, value: string) => {
+          const currentAmount = amounts[value] || 0;
+          amounts[value] = currentAmount + 1;
 
           return amounts;
         },
