@@ -62,6 +62,8 @@ export const race = {
   "7": "Hispanic or Latino",
 };
 
+export const raceWithUnavailbleValue = { ...race, "9": "Not available" };
+
 export const borrowerGender = {
   "1": "Male",
   "2": "Female",

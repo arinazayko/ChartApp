@@ -18,6 +18,7 @@ import {
   coBorrowerGender,
   unitAffordabilityCategory,
   raceComparisonLegend,
+  raceWithUnavailbleValue,
 } from "../constants/chartValues";
 
 import UploadFile from "./UploadFile";
@@ -188,7 +189,7 @@ const MainPage: FC = () => {
 
       case CsvValueName.BorrowerRace:
         return {
-          captions: { ...race, "9": "Not available" },
+          captions: raceWithUnavailbleValue,
           chartType: ChartType.Bar,
           chartData: hBarData(typeAmounts[0]),
           chartTitle: CsvValueName.BorrowerRace,
@@ -196,7 +197,7 @@ const MainPage: FC = () => {
 
       case CsvValueName.CoBorrowerRace:
         return {
-          captions: { ...race, "9": "Not available" },
+          captions: raceWithUnavailbleValue,
           chartType: ChartType.Pie,
           chartData: typeAmounts,
           chartTitle: CsvValueName.CoBorrowerRace,
@@ -229,7 +230,7 @@ const MainPage: FC = () => {
       case CsvValueName.RaceComparison:
         return {
           legend: raceComparisonLegend,
-          captions: { ...race, "9": "Not available" },
+          captions: raceWithUnavailbleValue,
           chartType: ChartType.Mixed,
           chartData: typeAmounts,
           chartTitle: CsvValueName.RaceComparison,
