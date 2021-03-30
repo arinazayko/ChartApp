@@ -85,7 +85,7 @@ const MainPage: FC = () => {
     []
   );
 
-  const borrowerRaceGenderData = useCallback(
+  const getBorrowerRaceGenderData = useCallback(
     (data: CsvValues[]): BasicChartData => {
       return data.reduce(
         (raceCountByGender: { [genderNumber: string]: number[] }, dataRow) => {
@@ -234,14 +234,14 @@ const MainPage: FC = () => {
         return {
           captions: race,
           chartType: ChartType.RaceGender,
-          chartData: [borrowerRaceGenderData(csvData)],
+          chartData: [getBorrowerRaceGenderData(csvData)],
           chartTitle: CsvValueName.BorrowerRaceGenderComparison,
         };
 
       default:
         return null;
     }
-  }, [typeAmounts, chartName, csvData, hBarData, borrowerRaceGenderData]);
+  }, [typeAmounts, chartName, csvData, hBarData, getBorrowerRaceGenderData]);
 
   const onArrayChange = (csvData: CsvValues[]) => {
     setCsvData(csvData);
