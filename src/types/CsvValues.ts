@@ -1,4 +1,4 @@
-export default interface CsvValue {
+export default interface CsvValues {
   [key: string]: string;
   EnterpriseFlag: string;
   RecordNumber: string;

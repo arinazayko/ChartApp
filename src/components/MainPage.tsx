@@ -1,8 +1,8 @@
 import React, { FC, useState, useMemo, useCallback } from "react";
 
-import CsvValue from "../types/CsvValue";
-import { ChartTypes } from "../enums/chartTypes";
-import { CsvValues } from "../enums/csvValues";
+import CsvValues from "../types/CsvValues";
+import { ChartType } from "../enums/chartType";
+import { CsvValueName } from "../enums/csvValue";
 import ChartInfo, { BasicChartData } from "../types/ChartInfo";
 import {
   enterpriseFlag,
@@ -27,11 +27,11 @@ import { Container } from "react-bootstrap";
 
 const MainPage: FC = () => {
   const [chartName, setChartName] = useState("");
-  const [csvData, setCsvData] = useState<CsvValue[]>([]);
+  const [csvData, setCsvData] = useState<CsvValues[]>([]);
 
-  const chartNameExceptions: { [key: string]: CsvValues[] } = useMemo(() => {
+  const chartNameExceptions: { [key: string]: CsvValueName[] } = useMemo(() => {
     return {
-      RaceComparison: [CsvValues.BorrowerRace, CsvValues.CoBorrowerRace],
+      RaceComparison: [CsvValueName.BorrowerRace, CsvValueName.CoBorrowerRace],
     };
   }, []);
 
@@ -86,11 +86,11 @@ const MainPage: FC = () => {
   );
 
   const borrowerRaceGenderData = useCallback(
-    (data: CsvValue[]): BasicChartData => {
+    (data: CsvValues[]): BasicChartData => {
       return data.reduce(
         (raceCountByGender: { [genderNumber: string]: number[] }, dataRow) => {
-          const gender = dataRow[CsvValues.BorrowerGender];
-          const race = dataRow[CsvValues.BorrowerRace];
+          const gender = dataRow[CsvValueName.BorrowerGender];
+          const race = dataRow[CsvValueName.BorrowerRace];
 
           // Ignore everything but "male"/"female" and "unknown" race
           if (+gender > 2 || race === "9") {
@@ -118,124 +118,124 @@ const MainPage: FC = () => {
     }
 
     switch (chartName) {
-      case CsvValues.EnterpriseFlag:
+      case CsvValueName.EnterpriseFlag:
         return {
           captions: enterpriseFlag,
-          chartType: ChartTypes.Pie,
+          chartType: ChartType.Pie,
           chartData: typeAmounts,
-          chartTitle: CsvValues.EnterpriseFlag,
+          chartTitle: CsvValueName.EnterpriseFlag,
         };
 
-      case CsvValues.MSACode:
+      case CsvValueName.MSACode:
         return {
           captions: MSACode,
-          chartType: ChartTypes.Pie,
+          chartType: ChartType.Pie,
           chartData: typeAmounts,
-          chartTitle: CsvValues.MSACode,
+          chartTitle: CsvValueName.MSACode,
         };
 
-      case CsvValues.CensusTract:
+      case CsvValueName.CensusTract:
         return {
           captions: censusTract,
-          chartType: ChartTypes.Pie,
+          chartType: ChartType.Pie,
           chartData: typeAmounts,
-          chartTitle: CsvValues.CensusTract,
+          chartTitle: CsvValueName.CensusTract,
         };
 
-      case CsvValues.TractIncomeRatio:
+      case CsvValueName.TractIncomeRatio:
         return {
           captions: tractIncomeRatio,
-          chartType: ChartTypes.Pie,
+          chartType: ChartType.Pie,
           chartData: typeAmounts,
-          chartTitle: CsvValues.TractIncomeRatio,
+          chartTitle: CsvValueName.TractIncomeRatio,
         };
 
-      case CsvValues.BorrowerIncomeRatio:
+      case CsvValueName.BorrowerIncomeRatio:
         return {
           captions: borrowerIncomeRatio,
-          chartType: ChartTypes.Pie,
+          chartType: ChartType.Pie,
           chartData: typeAmounts,
-          chartTitle: CsvValues.BorrowerIncomeRatio,
+          chartTitle: CsvValueName.BorrowerIncomeRatio,
         };
 
-      case CsvValues.LTV:
+      case CsvValueName.LTV:
         return {
           captions: LTV,
-          chartType: ChartTypes.Pie,
+          chartType: ChartType.Pie,
           chartData: typeAmounts,
-          chartTitle: CsvValues.LTV,
+          chartTitle: CsvValueName.LTV,
         };
 
-      case CsvValues.PurposeOfLoan:
+      case CsvValueName.PurposeOfLoan:
         return {
           captions: purposeOfLoan,
-          chartType: ChartTypes.Pie,
+          chartType: ChartType.Pie,
           chartData: typeAmounts,
-          chartTitle: CsvValues.PurposeOfLoan,
+          chartTitle: CsvValueName.PurposeOfLoan,
         };
 
-      case CsvValues.FederalGuarantee:
+      case CsvValueName.FederalGuarantee:
         return {
           captions: federalGuarantee,
-          chartType: ChartTypes.Pie,
+          chartType: ChartType.Pie,
           chartData: typeAmounts,
-          chartTitle: CsvValues.FederalGuarantee,
+          chartTitle: CsvValueName.FederalGuarantee,
         };
 
-      case CsvValues.BorrowerRace:
+      case CsvValueName.BorrowerRace:
         return {
           captions: { ...race, "9": "Not available" },
-          chartType: ChartTypes.Bar,
+          chartType: ChartType.Bar,
           chartData: hBarData(typeAmounts[0]),
-          chartTitle: CsvValues.BorrowerRace,
+          chartTitle: CsvValueName.BorrowerRace,
         };
 
-      case CsvValues.CoBorrowerRace:
+      case CsvValueName.CoBorrowerRace:
         return {
           captions: { ...race, "9": "Not available" },
-          chartType: ChartTypes.Pie,
+          chartType: ChartType.Pie,
           chartData: typeAmounts,
-          chartTitle: CsvValues.CoBorrowerRace,
+          chartTitle: CsvValueName.CoBorrowerRace,
         };
 
-      case CsvValues.BorrowerGender:
+      case CsvValueName.BorrowerGender:
         return {
           captions: borrowerGender,
-          chartType: ChartTypes.Bar,
+          chartType: ChartType.Bar,
           chartData: hBarData(typeAmounts[0]),
-          chartTitle: CsvValues.BorrowerGender,
+          chartTitle: CsvValueName.BorrowerGender,
         };
 
-      case CsvValues.CoBorrowerGender:
+      case CsvValueName.CoBorrowerGender:
         return {
           captions: coBorrowerGender,
-          chartType: ChartTypes.Bar,
+          chartType: ChartType.Bar,
           chartData: hBarData(typeAmounts[0]),
-          chartTitle: CsvValues.CoBorrowerGender,
+          chartTitle: CsvValueName.CoBorrowerGender,
         };
 
-      case CsvValues.UnitAffordabilityCategory:
+      case CsvValueName.UnitAffordabilityCategory:
         return {
           captions: unitAffordabilityCategory,
-          chartType: ChartTypes.Pie,
+          chartType: ChartType.Pie,
           chartData: typeAmounts,
-          chartTitle: CsvValues.UnitAffordabilityCategory,
+          chartTitle: CsvValueName.UnitAffordabilityCategory,
         };
 
-      case CsvValues.RaceComparison:
+      case CsvValueName.RaceComparison:
         return {
           captions: { ...race, "9": "Not available" },
-          chartType: ChartTypes.Mixed,
+          chartType: ChartType.Mixed,
           chartData: typeAmounts,
-          chartTitle: CsvValues.RaceComparison,
+          chartTitle: CsvValueName.RaceComparison,
         };
 
-      case CsvValues.BorrowerRaceGenderComparison:
+      case CsvValueName.BorrowerRaceGenderComparison:
         return {
           captions: race,
-          chartType: ChartTypes.RaceGender,
+          chartType: ChartType.RaceGender,
           chartData: [borrowerRaceGenderData(csvData)],
-          chartTitle: CsvValues.BorrowerRaceGenderComparison,
+          chartTitle: CsvValueName.BorrowerRaceGenderComparison,
         };
 
       default:
@@ -243,7 +243,7 @@ const MainPage: FC = () => {
     }
   }, [typeAmounts, chartName, csvData, hBarData, borrowerRaceGenderData]);
 
-  const onArrayChange = (csvData: CsvValue[]) => {
+  const onArrayChange = (csvData: CsvValues[]) => {
     setCsvData(csvData);
   };
 

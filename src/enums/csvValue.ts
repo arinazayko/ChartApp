@@ -1,4 +1,4 @@
-export enum CsvValues {
+export enum CsvValueName {
   EnterpriseFlag = "EnterpriseFlag",
   RecordNumber = "RecordNumber",
   MSACode = "MSACode",

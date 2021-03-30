@@ -1,10 +1,11 @@
 import React, { FC, FocusEvent, memo, useCallback } from "react";
 import { Form } from "react-bootstrap";
+
 import csvToJson from "csvtojson";
-import CsvValue from "../types/CsvValue";
+import CsvValues from "../types/CsvValues";
 
 interface UploadFileProps {
-  onArrayChange: (array: CsvValue[]) => void;
+  onArrayChange: (array: CsvValues[]) => void;
 }
 
 const UploadFile: FC<UploadFileProps> = ({ onArrayChange }) => {
