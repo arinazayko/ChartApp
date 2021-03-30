@@ -1,8 +1,7 @@
 import React, { FC, MouseEvent, memo, useCallback } from "react";
 
 import { getFormattedText } from "../utils/getFormattedText";
-
-import "./Sidebar.styles.css";
+import { ListGroup } from "react-bootstrap";
 
 interface SidebarProps {
   setChartName: any;
@@ -35,13 +34,13 @@ const Sidebar: FC<SidebarProps> = ({ setChartName }) => {
   );
 
   return (
-    <ul className="sidebarList">
+    <ListGroup variant="flush" className="mw-25 mr-5">
       {chartNames.map((name: string) => (
-        <li className="listItem" onClick={onClick(name)}>
+        <ListGroup.Item action onClick={onClick(name)}>
           {getFormattedText(name)}
-        </li>
+        </ListGroup.Item>
       ))}
-    </ul>
+    </ListGroup>
   );
 };
 

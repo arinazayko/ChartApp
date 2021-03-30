@@ -23,7 +23,7 @@ import UploadFile from "./UploadFile";
 import Sidebar from "./Sidebar";
 import ChartComponent from "./ChartComponent";
 
-import "./MainPage.styles.css";
+import { Container } from "react-bootstrap";
 
 const MainPage: FC = () => {
   const [chartName, setChartName] = useState("");
@@ -248,13 +248,14 @@ const MainPage: FC = () => {
   };
 
   return (
-    <div className="container">
+    <Container fluid className="mt-3">
+      <h1>Charts</h1>
       <UploadFile onArrayChange={onArrayChange} />
-      <main className="content">
+      <main className="d-flex">
         <Sidebar setChartName={setChartName} />
         <ChartComponent chartInfo={chartInfo} />
       </main>
-    </div>
+    </Container>
   );
 };
 

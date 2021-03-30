@@ -1,4 +1,5 @@
 import React, { FC, FocusEvent, memo, useCallback } from "react";
+import { Form } from "react-bootstrap";
 import csvToJson from "csvtojson";
 import CsvValue from "../types/CsvValue";
 
@@ -52,7 +53,13 @@ const UploadFile: FC<UploadFileProps> = ({ onArrayChange }) => {
     [onArrayChange]
   );
 
-  return <input type="file" onChange={showFile} />;
+  return (
+    <Form className="mb-3">
+      <Form.Group>
+        <Form.File id="exampleFormControlFile1" onChange={showFile} />
+      </Form.Group>
+    </Form>
+  );
 };
 
 export default memo(UploadFile);
