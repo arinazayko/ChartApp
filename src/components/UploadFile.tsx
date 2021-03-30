@@ -16,7 +16,6 @@ const UploadFile: FC<UploadFileProps> = ({ onArrayChange }) => {
       const reader = new FileReader();
 
       reader.onload = async (e: any) => {
-        console.log("onload started");
         const text = e.target.result;
 
         csvToJson({

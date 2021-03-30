@@ -1,8 +1,9 @@
 export default interface ChartInfo {
   captions: any;
   chartType: string;
-  chartTitle?: string;
   chartData: BasicChartData[];
+  chartTitle?: string;
+  legend?: any;
 }
 
 export interface BasicChartData {

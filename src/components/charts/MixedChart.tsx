@@ -10,7 +10,7 @@ interface MixedChartProps {
 }
 
 const MixedChart: FC<MixedChartProps> = ({ chartInfo }) => {
-  const { chartData, captions, chartTitle } = chartInfo;
+  const { chartData, captions, chartTitle, legend } = chartInfo;
 
   const sortedKeys = Object.keys(chartData[0]).sort((a, b) => {
     return +a - +b;
@@ -18,11 +18,13 @@ const MixedChart: FC<MixedChartProps> = ({ chartInfo }) => {
 
   const labels = sortedKeys.map((key) => captions[key]);
 
-  const series = chartData.map((sourceColumn: { [key: string]: number }) => {
-    const valuesArray = sortedKeys.map((key) => sourceColumn[key]);
+  const series = chartData.map(
+    (sourceColumn: { [key: string]: number }, index) => {
+      const valuesArray = sortedKeys.map((key) => sourceColumn[key]);
 
-    return { values: valuesArray };
-  });
+      return { values: valuesArray, text: legend[index] };
+    }
+  );
 
   let chartConfig = {
     type: "bar",

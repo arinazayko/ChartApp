@@ -34,7 +34,7 @@ const Sidebar: FC<SidebarProps> = ({ setChartName }) => {
   );
 
   return (
-    <ListGroup variant="flush" className="mw-25 mr-5">
+    <ListGroup variant="flush" className="mw-25">
       {chartNames.map((name: string) => (
         <ListGroup.Item action onClick={onClick(name)}>
           {getFormattedText(name)}

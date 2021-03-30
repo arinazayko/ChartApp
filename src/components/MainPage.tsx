@@ -17,6 +17,7 @@ import {
   borrowerGender,
   coBorrowerGender,
   unitAffordabilityCategory,
+  raceComparisonLegend,
 } from "../constants/chartValues";
 
 import UploadFile from "./UploadFile";
@@ -104,7 +105,10 @@ const MainPage: FC = () => {
           raceCountForCurrentGender[raceCountArrayIndex] =
             (raceCountForCurrentGender[raceCountArrayIndex] || 0) + 1;
 
-          return { ...raceCountByGender, [gender]: raceCountForCurrentGender };
+          return {
+            ...raceCountByGender,
+            [gender]: raceCountForCurrentGender,
+          };
         },
         {}
       );
@@ -224,6 +228,7 @@ const MainPage: FC = () => {
 
       case CsvValueName.RaceComparison:
         return {
+          legend: raceComparisonLegend,
           captions: { ...race, "9": "Not available" },
           chartType: ChartType.Mixed,
           chartData: typeAmounts,
@@ -232,6 +237,7 @@ const MainPage: FC = () => {
 
       case CsvValueName.BorrowerRaceGenderComparison:
         return {
+          legend: borrowerGender,
           captions: race,
           chartType: ChartType.RaceGender,
           chartData: [getBorrowerRaceGenderData(csvData)],

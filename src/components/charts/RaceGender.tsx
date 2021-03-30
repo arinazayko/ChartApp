@@ -12,7 +12,7 @@ interface MixedChartProps {
 const chartColors = ["#03a9f4", "#ff9800", "#4caf50", "#ff5722"];
 
 const RaceGender: FC<MixedChartProps> = ({ chartInfo }) => {
-  const { chartData, captions, chartTitle } = chartInfo;
+  const { chartData, captions, chartTitle, legend } = chartInfo;
   const data = chartData[0];
 
   const sortedKeys = Object.keys(captions).sort((a, b) => {
@@ -25,6 +25,7 @@ const RaceGender: FC<MixedChartProps> = ({ chartInfo }) => {
     const valuesArray = data[key];
 
     return {
+      text: legend[key],
       values: valuesArray,
       backgroundColor: chartColors[i],
       hoverState: {

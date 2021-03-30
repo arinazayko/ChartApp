@@ -87,3 +87,5 @@ export const unitAffordabilityCategory = {
   "9": "Not available",
   "0": "Missing",
 };
+
+export const raceComparisonLegend = { "0": "Borrower", "1": "Co-Borrower" };
