@@ -4,12 +4,11 @@ import ZingChart from "zingchart-react";
 
 import { getFormattedText } from "../../utils/getFormattedText";
 import ChartInfo from "../../types/ChartInfo";
+import { chartColors } from "../../constants/colors";
 
 interface PieChartProps {
   chartInfo: ChartInfo;
 }
-
-const chartColors = ["#03a9f4", "#ff9800", "#4caf50", "#ff5722"];
 
 const PieChart: FC<PieChartProps> = ({ chartInfo }) => {
   const { chartData, captions, chartTitle } = chartInfo;
