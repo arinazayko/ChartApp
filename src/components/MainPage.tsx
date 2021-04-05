@@ -1,25 +1,46 @@
 import React, { FC, useState, useMemo, useCallback } from "react";
+
+import CsvValues from "../types/CsvValues";
+import { ChartType } from "../enums/chartType";
+import { CsvValueName } from "../enums/csvValue";
+import ChartInfo, { BasicChartData } from "../types/ChartInfo";
+import {
+  enterpriseFlag,
+  MSACode,
+  censusTract,
+  tractIncomeRatio,
+  borrowerIncomeRatio,
+  LTV,
+  purposeOfLoan,
+  federalGuarantee,
+  race,
+  borrowerGender,
+  coBorrowerGender,
+  unitAffordabilityCategory,
+  raceComparisonLegend,
+  raceWithUnavailbleValue,
+} from "../constants/chartValues";
+
 import UploadFile from "./UploadFile";
 import Sidebar from "./Sidebar";
 import ChartComponent from "./ChartComponent";
-import CsvValue from "../types/CsvValue";
-import { CsvValues } from "../enums/csvValues";
-import ChartInfo, { BasicChartData } from "../types/ChartInfo";
-import "./MainPage.styles.css";
+
+import { Container } from "react-bootstrap";
 
 const MainPage: FC = () => {
   const [chartName, setChartName] = useState("");
-  const [csvData, setCsvData] = useState<CsvValue[]>([]);
+  const [csvData, setCsvData] = useState<CsvValues[]>([]);
 
-  const chartNameExceptions: { [key: string]: CsvValues[] } = useMemo(() => {
+  const chartNameExceptions: { [key: string]: CsvValueName[] } = useMemo(() => {
     return {
-      RaceComparison: [CsvValues.BorrowerRace, CsvValues.CoBorrowerRace],
+      RaceComparison: [CsvValueName.BorrowerRace, CsvValueName.CoBorrowerRace],
     };
   }, []);
 
-  const columnsArray = useMemo(() => {
-    return chartNameExceptions[chartName] || [chartName];
-  }, [chartName, chartNameExceptions]);
+  const columnsArray = useMemo(
+    () => chartNameExceptions[chartName] || [chartName],
+    [chartName, chartNameExceptions]
+  );
 
   const typeAmounts = useMemo((): BasicChartData[] | null => {
     if (!csvData.length) {
@@ -31,6 +52,7 @@ const MainPage: FC = () => {
         return dataRow[columnName];
       });
 
+      // 'value' is the number representing a specific race\gender etc.
       return chosenColumnData.reduce(
         (amounts: { [key: string]: number }, value: string) => {
           const currentAmount = amounts[value] || 0;
@@ -65,226 +87,182 @@ const MainPage: FC = () => {
     []
   );
 
+  const getBorrowerRaceGenderData = useCallback(
+    (data: CsvValues[]): BasicChartData => {
+      return data.reduce(
+        (raceCountByGender: { [genderNumber: string]: number[] }, dataRow) => {
+          const gender = dataRow[CsvValueName.BorrowerGender];
+          const race = dataRow[CsvValueName.BorrowerRace];
+
+          // Ignore everything but "male"/"female" and "unknown" race
+          if (+gender > 2 || race === "9") {
+            return raceCountByGender;
+          }
+
+          const raceCountForCurrentGender = raceCountByGender[gender] || [];
+
+          const raceCountArrayIndex = +race - 1;
+
+          raceCountForCurrentGender[raceCountArrayIndex] =
+            (raceCountForCurrentGender[raceCountArrayIndex] || 0) + 1;
+
+          return {
+            ...raceCountByGender,
+            [gender]: raceCountForCurrentGender,
+          };
+        },
+        {}
+      );
+    },
+    []
+  );
+
   const chartInfo: ChartInfo | null = useMemo(() => {
-    if (!typeAmounts || !chartName) {
+    if (!typeAmounts || !chartName || !csvData) {
       return null;
     }
 
     switch (chartName) {
-      case CsvValues.EnterpriseFlag:
+      case CsvValueName.EnterpriseFlag:
         return {
-          captions: {
-            "1": "Fannie Mae",
-            "2": "Freddie Mac",
-          },
-          chartType: "pie",
+          captions: enterpriseFlag,
+          chartType: ChartType.Pie,
           chartData: typeAmounts,
-          chartTitle: CsvValues.EnterpriseFlag,
+          chartTitle: CsvValueName.EnterpriseFlag,
         };
 
-      case CsvValues.MSACode:
+      case CsvValueName.MSACode:
         return {
-          captions: {
-            "1": "Metropolitan area",
-            "0": "Non-metropolitan area",
-          },
-          chartType: "pie",
+          captions: MSACode,
+          chartType: ChartType.Pie,
           chartData: typeAmounts,
-          chartTitle: CsvValues.MSACode,
+          chartTitle: CsvValueName.MSACode,
         };
 
-      case CsvValues.CensusTract:
+      case CsvValueName.CensusTract:
         return {
-          captions: {
-            "1": ">=0, <10%",
-            "2": ">=10, <30%",
-            "3": ">=30, <=100%",
-            "9": "Missing",
-          },
-          chartType: "pie",
+          captions: censusTract,
+          chartType: ChartType.Pie,
           chartData: typeAmounts,
-          chartTitle: CsvValues.CensusTract,
+          chartTitle: CsvValueName.CensusTract,
         };
 
-      case CsvValues.TractIncomeRatio:
+      case CsvValueName.TractIncomeRatio:
         return {
-          captions: {
-            "1": ">0, <=80%",
-            "2": ">80, <=120%",
-            "3": ">120%",
-            "9": "Missing",
-          },
-          chartType: "pie",
+          captions: tractIncomeRatio,
+          chartType: ChartType.Pie,
           chartData: typeAmounts,
-          chartTitle: CsvValues.TractIncomeRatio,
+          chartTitle: CsvValueName.TractIncomeRatio,
         };
 
-      case CsvValues.BorrowerIncomeRatio:
+      case CsvValueName.BorrowerIncomeRatio:
         return {
-          captions: {
-            "1": ">=0,<=50%",
-            "2": ">50, <=80%",
-            "3": ">80%",
-            "9": "Not applicable",
-          },
-          chartType: "pie",
+          captions: borrowerIncomeRatio,
+          chartType: ChartType.Pie,
           chartData: typeAmounts,
-          chartTitle: CsvValues.BorrowerIncomeRatio,
+          chartTitle: CsvValueName.BorrowerIncomeRatio,
         };
 
-      case CsvValues.LTV:
+      case CsvValueName.LTV:
         return {
-          captions: {
-            "1": ">0, <=60%",
-            "2": ">60, <=80%",
-            "3": ">80, <=90%",
-            "4": ">90, <=95%",
-            "5": ">95%",
-            "9": "Missing",
-          },
-          chartType: "pie",
+          captions: LTV,
+          chartType: ChartType.Pie,
           chartData: typeAmounts,
-          chartTitle: CsvValues.LTV,
+          chartTitle: CsvValueName.LTV,
         };
 
-      case CsvValues.PurposeOfLoan:
+      case CsvValueName.PurposeOfLoan:
         return {
-          captions: {
-            "1": "Purchase",
-            "8": "Other",
-            "9": "Not applicable",
-          },
-          chartType: "pie",
+          captions: purposeOfLoan,
+          chartType: ChartType.Pie,
           chartData: typeAmounts,
-          chartTitle: CsvValues.PurposeOfLoan,
+          chartTitle: CsvValueName.PurposeOfLoan,
         };
 
-      case CsvValues.FederalGuarantee:
+      case CsvValueName.FederalGuarantee:
         return {
-          captions: {
-            "1": "FHA/VA",
-            "2": "Rural Housing Service",
-            "3": "Home Equity Conversion Mortgage",
-            "4": "No Federal guarantee",
-            "5": "FHA",
-          },
-          chartType: "pie",
+          captions: federalGuarantee,
+          chartType: ChartType.Pie,
           chartData: typeAmounts,
-          chartTitle: CsvValues.FederalGuarantee,
+          chartTitle: CsvValueName.FederalGuarantee,
         };
 
-      case CsvValues.BorrowerRace:
+      case CsvValueName.BorrowerRace:
         return {
-          captions: {
-            "1": "American Indian or Alaska Native",
-            "2": "Asian",
-            "3": "Black or African American",
-            "4": "Native Hawaiian or Other Pacific Islander",
-            "5": "White",
-            "6": "Two or more races",
-            "7": "Hispanic or Latino",
-            "9": "Not available",
-          },
-          chartType: "bar",
+          captions: raceWithUnavailbleValue,
+          chartType: ChartType.Bar,
           chartData: hBarData(typeAmounts[0]),
-          chartTitle: CsvValues.BorrowerRace,
+          chartTitle: CsvValueName.BorrowerRace,
         };
 
-      case CsvValues.CoBorrowerRace:
+      case CsvValueName.CoBorrowerRace:
         return {
-          captions: {
-            "1": "American Indian or Alaska Native",
-            "2": "Asian",
-            "3": "Black or African American",
-            "4": "Native Hawaiian or Other Pacific Islander",
-            "5": "White",
-            "6": "Two or more races",
-            "7": "Hispanic or Latino",
-            "9": "Not available",
-          },
-          chartType: "pie",
+          captions: raceWithUnavailbleValue,
+          chartType: ChartType.Pie,
           chartData: typeAmounts,
-          chartTitle: CsvValues.CoBorrowerRace,
+          chartTitle: CsvValueName.CoBorrowerRace,
         };
 
-      case CsvValues.BorrowerGender:
+      case CsvValueName.BorrowerGender:
         return {
-          captions: {
-            "1": "Male",
-            "2": "Female",
-            "3": "Information is not provided",
-            "4": "Not applicable",
-            "9": "Missing",
-          },
-          chartType: "bar",
+          captions: borrowerGender,
+          chartType: ChartType.Bar,
           chartData: hBarData(typeAmounts[0]),
-          chartTitle: CsvValues.BorrowerGender,
+          chartTitle: CsvValueName.BorrowerGender,
         };
 
-      case CsvValues.CoBorrowerGender:
+      case CsvValueName.CoBorrowerGender:
         return {
-          captions: {
-            "1": "Male",
-            "2": "Female",
-            "3": "Information is not provided",
-            "4": "Not applicable",
-            "5": "No co-borrower",
-            "9": "Missing",
-          },
-          chartType: "bar",
+          captions: coBorrowerGender,
+          chartType: ChartType.Bar,
           chartData: hBarData(typeAmounts[0]),
-          chartTitle: CsvValues.CoBorrowerGender,
+          chartTitle: CsvValueName.CoBorrowerGender,
         };
 
-      case CsvValues.UnitAffordabilityCategory:
+      case CsvValueName.UnitAffordabilityCategory:
         return {
-          captions: {
-            "1": "Low-income family in a low-income area",
-            "2": "Very low-income family in a low-income area",
-            "3": "Very low-income family not in a low-income area",
-            "4": "Other",
-            "9": "Not available",
-            "0": "Missing",
-          },
-          chartType: "pie",
+          captions: unitAffordabilityCategory,
+          chartType: ChartType.Pie,
           chartData: typeAmounts,
-          chartTitle: CsvValues.UnitAffordabilityCategory,
+          chartTitle: CsvValueName.UnitAffordabilityCategory,
         };
 
-      case CsvValues.RaceComparison:
+      case CsvValueName.RaceComparison:
         return {
-          captions: {
-            "1": "American Indian or Alaska Native",
-            "2": "Asian",
-            "3": "Black or African American",
-            "4": "Native Hawaiian or Other Pacific Islander",
-            "5": "White",
-            "6": "Two or more races",
-            "7": "Hispanic or Latino",
-            "9": "Not available",
-          },
-          chartType: "mixed",
+          legend: raceComparisonLegend,
+          captions: raceWithUnavailbleValue,
+          chartType: ChartType.Mixed,
           chartData: typeAmounts,
-          chartTitle: CsvValues.RaceComparison,
+          chartTitle: CsvValueName.RaceComparison,
+        };
+
+      case CsvValueName.BorrowerRaceGenderComparison:
+        return {
+          legend: borrowerGender,
+          captions: race,
+          chartType: ChartType.RaceGender,
+          chartData: [getBorrowerRaceGenderData(csvData)],
+          chartTitle: CsvValueName.BorrowerRaceGenderComparison,
         };
 
       default:
         return null;
     }
-  }, [typeAmounts, chartName, hBarData]);
+  }, [typeAmounts, chartName, csvData, hBarData, getBorrowerRaceGenderData]);
 
-  const onArrayChange = (csvData: CsvValue[]) => {
+  const onArrayChange = (csvData: CsvValues[]) => {
     setCsvData(csvData);
   };
 
   return (
-    <div className="container">
+    <Container fluid className="mt-3">
+      <h1>Charts</h1>
       <UploadFile onArrayChange={onArrayChange} />
-      <main className="content">
+      <main className="d-flex">
         <Sidebar setChartName={setChartName} />
         <ChartComponent chartInfo={chartInfo} />
       </main>
-    </div>
+    </Container>
   );
 };
 

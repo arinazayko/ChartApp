@@ -1,4 +1,4 @@
-export enum CsvValues {
+export enum CsvValueName {
   EnterpriseFlag = "EnterpriseFlag",
   RecordNumber = "RecordNumber",
   MSACode = "MSACode",
@@ -15,4 +15,5 @@ export enum CsvValues {
   NumberOfUnits = "NumberOfUnits",
   UnitAffordabilityCategory = "UnitAffordabilityCategory",
   RaceComparison = "RaceComparison",
+  BorrowerRaceGenderComparison = "BorrowerRaceGenderComparison",
 }

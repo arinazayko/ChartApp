@@ -1,6 +1,8 @@
-import React, { FC, memo } from "react";
+import React, { FC } from "react";
 import "zingchart/es6";
 import ZingChart from "zingchart-react";
+
+import { getFormattedText } from "../../utils/getFormattedText";
 import ChartInfo from "../../types/ChartInfo";
 
 interface MixedChartProps {
@@ -8,18 +10,19 @@ interface MixedChartProps {
 }
 
 const MixedChart: FC<MixedChartProps> = ({ chartInfo }) => {
-  console.log(chartInfo);
+  const { chartData, captions, chartTitle, legend } = chartInfo;
 
-  const sortedKeys = Object.keys(chartInfo.chartData[0]).sort(function (a, b) {
+  const sortedKeys = Object.keys(chartData[0]).sort((a, b) => {
     return +a - +b;
   });
 
-  const labels = sortedKeys.map((key) => chartInfo.captions[key]);
+  const labels = sortedKeys.map((key) => captions[key]);
 
-  const series = chartInfo.chartData.map(
-    (sourceColumn: { [key: string]: number }) => {
+  const series = chartData.map(
+    (sourceColumn: { [key: string]: number }, index) => {
       const valuesArray = sortedKeys.map((key) => sourceColumn[key]);
-      return { values: valuesArray };
+
+      return { values: valuesArray, text: legend[index] };
     }
   );
 
@@ -30,13 +33,25 @@ const MixedChart: FC<MixedChartProps> = ({ chartInfo }) => {
       fontFamily: "Helvetica",
     },
     title: {
-      text: chartInfo.chartTitle?.split(/(?=[A-Z])/).join(" "),
+      text: getFormattedText(chartTitle!),
       paddingLeft: "50px",
       fontSize: "24px",
       textAlign: "left",
     },
     plotarea: {
+      marginTop: "100px",
       adjustLayout: true,
+    },
+    legend: {
+      cursor: "hand",
+      draggable: true,
+      dragHandler: "icon",
+      toggleAction: "remove",
+      minimize: true,
+      header: {
+        height: "20px",
+        text: getFormattedText(chartTitle!),
+      },
     },
     plot: {
       animation: {
@@ -61,4 +76,4 @@ const MixedChart: FC<MixedChartProps> = ({ chartInfo }) => {
   return <ZingChart data={chartConfig} />;
 };
 
-export default memo(MixedChart);
+export default MixedChart;

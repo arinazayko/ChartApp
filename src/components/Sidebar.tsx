@@ -1,6 +1,7 @@
 import React, { FC, MouseEvent, memo, useCallback } from "react";
 
-import "./Sidebar.styles.css";
+import { getFormattedText } from "../utils/getFormattedText";
+import { ListGroup } from "react-bootstrap";
 
 interface SidebarProps {
   setChartName: any;
@@ -21,6 +22,7 @@ const chartNames = [
   "CoBorrowerGender",
   "UnitAffordabilityCategory",
   "RaceComparison",
+  "BorrowerRaceGenderComparison",
 ];
 
 const Sidebar: FC<SidebarProps> = ({ setChartName }) => {
@@ -32,13 +34,13 @@ const Sidebar: FC<SidebarProps> = ({ setChartName }) => {
   );
 
   return (
-    <ul className="sidebarList">
+    <ListGroup variant="flush" className="mw-25">
       {chartNames.map((name: string) => (
-        <li className="listItem" onClick={onClick(name)}>
-          {name}
-        </li>
+        <ListGroup.Item action onClick={onClick(name)}>
+          {getFormattedText(name)}
+        </ListGroup.Item>
       ))}
-    </ul>
+    </ListGroup>
   );
 };
 
